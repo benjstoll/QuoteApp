@@ -1,11 +1,24 @@
 import boto3
 from botocore.exceptions import ClientError
+from os import getenv
 
 class DynamoDb:
     def __init__(self, table_name='words_to_live_by'):
+        aws_access_key = getenv("AWS_ACCESS_KEY_ID")
+        aws_secret_key = getenv("AWS_SECRET_ACCESS_KEY")
+        aws_region = getenv("AWS_REGION", "us-east-2")
+
         # Initialize the DynamoDB resource and the table
-        self.dynamodb = boto3.resource('dynamodb')
+        self.dynamodb = boto3.resource(
+            "dynamodb",
+            aws_access_key_id=aws_access_key,
+            aws_secret_access_key=aws_secret_key,
+            region_name=aws_region,  # Ensure the region is set
+        
+        )
         self.table = self.dynamodb.Table(table_name)
+
+
 
 
     def insert_quote(self, quote_id, quote):
