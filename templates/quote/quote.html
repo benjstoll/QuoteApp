@@ -6,7 +6,7 @@
         <h1 class="text-center">Quote Generator</h1>
 
         <div class="text-center mt-4">
-            <h4>Current Number of Quotes: <span id="quote-count">{{ count }}</span></h4>
+            <h4>Current Number of Quotes: <span id="quote-count">{{ quote_count }}</span></h4>
         </div>
 
         <div class="mt-4 text-center">
@@ -16,8 +16,12 @@
         </div>
 
         <div class="text-center mt-4">
-            <button class="btn btn-primary" id="generate-btn">Generate New Quote</button>
-            <button class="btn btn-danger" id="clear-btn">Clear All Quotes</button>
+            <form action="/generate" method="post">
+                <button type="submit" class="btn btn-primary" id="generate-btn">Generate New Quote</button>
+            </form>
+            <form action="/clear" method="post">
+                <button class="btn btn-danger" id="clear-btn">Clear All Quotes</button>
+            </form>
         </div>
     </div>
 {% endblock %}

@@ -23,7 +23,7 @@ class GenAi:
     def validate_json(self, json_dump):
         try:
             # Try parsing the JSON string
-            loads(json_dump)
+            json_dump = loads(json_dump)
         except JSONDecodeError as e:
             return None
 
