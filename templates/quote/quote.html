@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block main %}
+    <div class="container mt-5">
+        <h1 class="text-center">Quote Generator</h1>
+
+        <div class="text-center mt-4">
+            <h4>Current Number of Quotes: <span id="quote-count">{{ count }}</span></h4>
+        </div>
+
+        <div class="mt-4 text-center">
+            <blockquote class="blockquote">
+                <p class="mb-0" id="quote">{{ quote }}</p>
+            </blockquote>
+        </div>
+
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" id="generate-btn">Generate New Quote</button>
+            <button class="btn btn-danger" id="clear-btn">Clear All Quotes</button>
+        </div>
+    </div>
+{% endblock %}
