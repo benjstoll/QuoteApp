@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, redirect, url_for
 from os import path
 from yaml import safe_load
 
+import logging
+logger = logging.getLogger(__name__)
 
 from gemini_handler import genai_gemini
 from dynamo_handler import dynamo
@@ -16,6 +18,7 @@ gai = genai_gemini.GenAi(config['gemini_key'], config['prompt'])
 db = dynamo.DynamoDb(config['dynamo_table'])
 
 
+# Main page for user interaction
 @bp.route('/')
 def quote_page():
     # Fetch the current quote and count
@@ -28,15 +31,20 @@ def quote_page():
     return render_template('quote/quote.html', quote_count=quote_count, quote=quote)
 
 
+# POST method to generate a new gemini quote and post it to the database.
 @bp.route('/generate', methods=['POST'])
 def generate():
+    logger.info('Generating quote from Gemini...')
     quote = gai.generate_quote()['quote']
+
+    logger.info('Adding quote to the database...')
     quote_count = db.get_quote_count()
     db.insert_quote(quote_id=quote_count+1, quote=quote)
 
     return redirect(url_for('quote.quote_page'))
 
 
+# Clear all entries from the database
 @bp.route('/clear', methods=['POST'])
 def clear():
     db.clear_all_quotes()

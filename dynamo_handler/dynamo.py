@@ -7,6 +7,7 @@ class DynamoDb:
         aws_access_key = getenv("AWS_ACCESS_KEY_ID")
         aws_secret_key = getenv("AWS_SECRET_ACCESS_KEY")
         aws_region = getenv("AWS_REGION", "us-east-2")
+        table_name = getenv("TABLE_NAME", table_name)
 
         # Initialize the DynamoDB resource and the table
         self.dynamodb = boto3.resource(
@@ -17,8 +18,6 @@ class DynamoDb:
         
         )
         self.table = self.dynamodb.Table(table_name)
-
-
 
 
     def insert_quote(self, quote_id, quote):
