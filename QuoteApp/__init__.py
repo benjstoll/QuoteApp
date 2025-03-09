@@ -15,3 +15,6 @@ def create_app(test_config=None):
     app.register_blueprint(quote.bp)
 
     return app
+
+
+logger.info('')

@@ -13,12 +13,15 @@ class QuoteSchema(BaseModel):
 class GenAi:
     def __init__(self, api_key, prompt):
         self.prompt = prompt
+        self.history = []
 
         logger.info('Attempting to start client with Gemini...')
         try: 
             self.schema = {
                 'response_mime_type': 'application/json',
-                'response_schema': QuoteSchema
+                'response_schema': QuoteSchema,
+                'temperature': 0.5,
+                'top_p': 0.7
             }
 
             self.client = genai.Client(api_key=api_key)
@@ -47,11 +50,13 @@ class GenAi:
     def generate_quote(self, attempts=0):
         if attempts > 2:
             return None
+        
+        prompt_with_context = self.prompt + ' ' + str(self.history)
 
         logger.info('Sending prompt to Gemini...')
         response = self.client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=self.prompt,
+            model="gemini-1.5-flash",
+            contents=prompt_with_context,
             config=self.schema,
         )
         json_text = self.validate_json(response.text)
@@ -60,6 +65,11 @@ class GenAi:
             logger.error(f'Attempt Count: {attempts+1}')
             self.generate_quote(attempts+1)
 
+
+        if len(self.history) == 15:
+            self.history.pop(0)
+        
+        self.history.append(json_text)
         return json_text
     
 
