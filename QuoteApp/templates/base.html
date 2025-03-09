@@ -9,6 +9,10 @@
 <body>
     {% block main %}{% endblock %}
 
+    <footer id="ip-address-container">
+        Resource IP Address: {{ ip }}
+    </footer>
+
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

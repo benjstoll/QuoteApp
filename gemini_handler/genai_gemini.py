@@ -12,12 +12,14 @@ class QuoteSchema(BaseModel):
 
 
 class GenAi:
-    def __init__(self, api_key, prompt):
+    def __init__(self, prompt):
         self.prompt = prompt
         self.history = []
 
-        if not environ['GEMINI_API_KEY']:
-            logger.error('Please set up GEMINI_API_KEY in environment variables.')
+        try:
+            api_key = environ['GEMINI_API_KEY']
+        except Exception as e:
+            logger.info('GEMINI_API_KEY not defined in environment variables')
             exit(1)
 
         logger.info('Attempting to start client with Gemini...')
@@ -79,7 +81,6 @@ class GenAi:
     
 
 if __name__ == '__main__':
-    api_key = None ### Replace with your API key for prompt tuning
     prompt = 'Generate a quote that is no longer than 30 words in length. The content can either be silly, nonsensical, inspirational, or passive aggressive. Choose only one of these at your discretion.'
-    gai = GenAi(api_key, prompt)
+    gai = GenAi(prompt)
     print(gai.generate_quote())

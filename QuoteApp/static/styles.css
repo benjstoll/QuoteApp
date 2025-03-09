@@ -63,6 +63,27 @@ button:focus {
     background-color: #c82333;
 }
 
+#ip-address-container {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+#ip-address-container:hover {
+    background-color: #007bff;
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
 .text-center {
     text-align: center;
 }

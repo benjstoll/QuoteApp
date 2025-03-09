@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 from os import path
 from yaml import safe_load
+from requests import get
 
 import logging
 logger = logging.getLogger(__name__)
@@ -14,8 +15,14 @@ with open(config_path, 'r') as f:
     config = safe_load(f)
 
 bp = Blueprint('quote', __name__)
-gai = genai_gemini.GenAi(config['gemini_key'], config['prompt'])
+gai = genai_gemini.GenAi(config['prompt'])
 db = dynamo.DynamoDb(config['dynamo_table'])
+
+try:
+    ip = get('http://169.254.169.254/latest/meta-data/local-ipv4').text.strip()
+except:
+    logger.error('Could not get IPv4 address from instance.')
+    ip = None
 
 
 # Main page for user interaction
@@ -28,7 +35,7 @@ def quote_page():
     if not quote:
         quote = "No quotes currently in database, please generate one."
 
-    return render_template('quote/quote.html', quote_count=quote_count, quote=quote)
+    return render_template('quote/quote.html', quote_count=quote_count, quote=quote, ip=ip)
 
 
 # POST method to generate a new gemini quote and post it to the database.
