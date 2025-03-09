@@ -1,3 +1,2 @@
-gemini_key: yourapikeyhere
 prompt: Generate a unique quote that is no longer than 30 words in length. The content can either be silly, nonsensical, inspirational, or passive aggressive. Choose only one of these at your discretion. Ensure that the quote is not similar to any of the following
 dynamo_table: words_to_live_by

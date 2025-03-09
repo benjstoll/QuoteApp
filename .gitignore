@@ -1,4 +1,3 @@
-config.yml
 .venv/
 __pycache__/
 .setenv.ps1

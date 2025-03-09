@@ -1,6 +1,7 @@
 from json import loads, JSONDecodeError
 from google import genai
 from pydantic import BaseModel
+from os import environ
 
 import logging
 logger = logging.getLogger(__name__)
@@ -14,6 +15,10 @@ class GenAi:
     def __init__(self, api_key, prompt):
         self.prompt = prompt
         self.history = []
+
+        if not environ['GEMINI_API_KEY']:
+            logger.error('Please set up GEMINI_API_KEY in environment variables.')
+            exit(1)
 
         logger.info('Attempting to start client with Gemini...')
         try: 
