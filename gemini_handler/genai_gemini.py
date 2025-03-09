@@ -2,6 +2,9 @@ from json import loads, JSONDecodeError
 from google import genai
 from pydantic import BaseModel
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class QuoteSchema(BaseModel):
     quote: str
@@ -11,20 +14,30 @@ class GenAi:
     def __init__(self, api_key, prompt):
         self.prompt = prompt
 
-        self.schema = {
-            'response_mime_type': 'application/json',
-            'response_schema': QuoteSchema
-        }
+        logger.info('Attempting to start client with Gemini...')
+        try: 
+            self.schema = {
+                'response_mime_type': 'application/json',
+                'response_schema': QuoteSchema
+            }
 
-        self.client = genai.Client(api_key=api_key)
+            self.client = genai.Client(api_key=api_key)
+        except Exception as e:
+            logger.error('Initialization failed with Gemini, exiting...')
+            logger.error(e)
+            exit(1)
+
         
-
     # Ensure Gemini's output is proper.
     def validate_json(self, json_dump):
+        logger.info('Validating Gemini\'s output...')
         try:
             # Try parsing the JSON string
             json_dump = loads(json_dump)
+            logger.info('Output valid, returning...')
         except JSONDecodeError as e:
+            logger.error('Output invalid, will attempt again...')
+            logger.error(e)
             return None
 
         return(json_dump)    
@@ -35,6 +48,7 @@ class GenAi:
         if attempts > 2:
             return None
 
+        logger.info('Sending prompt to Gemini...')
         response = self.client.models.generate_content(
             model="gemini-2.0-flash",
             contents=self.prompt,
@@ -42,7 +56,8 @@ class GenAi:
         )
         json_text = self.validate_json(response.text)
 
-        if not json_text:
+        if not json_text and attempts < 3:
+            logger.error(f'Attempt Count: {attempts+1}')
             self.generate_quote(attempts+1)
 
         return json_text
